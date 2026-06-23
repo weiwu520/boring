@@ -146,11 +146,18 @@
   #noBtn {
     background: linear-gradient(135deg, #6dd5ed 0%, #2193b0 100%);
     color: white;
-    transform-origin: center center;
+    --s: 1;
+    font-size: calc(24px * var(--s));
+    padding: calc(16px * var(--s)) calc(52px * var(--s));
+    border-radius: calc(14px * var(--s));
+    letter-spacing: calc(1px * var(--s));
+    box-shadow: 0 calc(6px * var(--s)) calc(14px * var(--s)) rgba(0,0,0,0.18);
+    transition: top 0.25s ease, left 0.25s ease;
   }
   #noBtn.floating {
     position: fixed;
-    z-index: 999;
+    z-index: 9999;
+    margin: 0;
   }
 
   .heart {
@@ -217,16 +224,17 @@
   let isFloating = false;
 
   function moveNoButtonRandomly() {
-    const btnRect = noBtn.getBoundingClientRect();
-    const w = btnRect.width;
-    const h = btnRect.height;
-    const maxX = window.innerWidth - w - 10;
-    const maxY = window.innerHeight - h - 10;
-    const randX = Math.max(0, Math.random() * maxX);
-    const randY = Math.max(0, Math.random() * maxY);
-    noBtn.style.left = randX + 'px';
-    noBtn.style.top = randY + 'px';
+    const winW = window.innerWidth;
+    const winH = window.innerHeight;
+    let randL = Math.random() * winW + 50;
+    let randT = Math.random() * winH + 50;
+    noBtn.style.left = randL + 'px';
+    noBtn.style.top  = randT + 'px';
   }
+
+  window.addEventListener('resize', () => {
+    if (isFloating) moveNoButtonRandomly();
+  });
 
   noBtn.addEventListener('click', () => {
     if (isFloating) {
@@ -235,12 +243,15 @@
     }
 
     scale = Math.max(floatThreshold, scale - shrinkStep);
-    noBtn.style.transform = `scale(${scale})`;
+    noBtn.style.setProperty('--s', scale);
 
     if (scale <= floatThreshold + 0.0001) {
       isFloating = true;
       noBtn.classList.add('floating');
-      moveNoButtonRandomly();
+      // 把 No 按鈕搬到 body 下，避開 .card 的 backdrop-filter 造成的
+      // containing block，讓 position:fixed 真正以視窗為原點
+      document.body.appendChild(noBtn);
+      requestAnimationFrame(moveNoButtonRandomly);
     }
   });
 
@@ -268,6 +279,8 @@
     // 隱藏副文字與按鈕，讓主訊息獨秀
     document.querySelectorAll('.sub-message, .divider, .sub-top').forEach(el => el.style.display = 'none');
     document.getElementById('buttons').style.display = 'none';
+    // No 按鈕進入飄移模式後已搬到 body 下，需單獨隱藏
+    noBtn.style.display = 'none';
     spawnHearts();
   });
 </script>
