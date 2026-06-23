@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>給我 $$$$$$$</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
+    background: linear-gradient(135deg, #ffd6e7 0%, #ffe9f0 40%, #fff5f8 100%);
+  }
+
+  /* 背景漂浮的小愛心 */
+  .bg-heart {
+    position: absolute;
+    color: rgba(255, 105, 160, 0.35);
+    user-select: none;
+    pointer-events: none;
+    animation: bgFloat linear infinite;
+  }
+  @keyframes bgFloat {
+    0%   { transform: translateY(0)   rotate(0deg);   opacity: 0; }
+    10%  { opacity: 0.8; }
+    90%  { opacity: 0.8; }
+    100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+  }
+
+  #stage {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+  }
+
+  .card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 2px solid rgba(255, 182, 193, 0.6);
+    border-radius: 28px;
+    padding: 50px 70px;
+    box-shadow:
+      0 20px 60px rgba(214, 51, 108, 0.18),
+      0 0 0 6px rgba(255, 255, 255, 0.4) inset;
+    text-align: center;
+    max-width: 90vw;
+  }
+  .card::before,
+  .card::after {
+    content: "♥";
+    position: absolute;
+    font-size: 28px;
+    color: #ff8fb3;
+    opacity: 0.8;
+  }
+  .card::before { top: 14px; left: 22px; }
+  .card::after  { bottom: 14px; right: 22px; }
+
+  .sub-top {
+    font-size: 18px;
+    color: #c2185b;
+    letter-spacing: 6px;
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+
+  #message {
+    font-size: 56px;
+    color: #d6336c;
+    font-weight: 900;
+    margin: 0 0 18px 0;
+    text-align: center;
+    text-shadow: 2px 3px 6px rgba(214, 51, 108, 0.25);
+    letter-spacing: 2px;
+    animation: pulse 2.2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.04); }
+  }
+
+  .sub-message {
+    font-size: 20px;
+    color: #8a4a6b;
+    margin-bottom: 8px;
+    line-height: 1.6;
+  }
+  .sub-message .accent {
+    color: #d6336c;
+    font-weight: bold;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 24px auto;
+    color: #ff8fb3;
+    font-size: 14px;
+  }
+  .divider::before,
+  .divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #ffb6c8, transparent);
+  }
+
+  #buttons {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+  }
+  button {
+    font-size: 24px;
+    padding: 16px 52px;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.18);
+    transition: transform 0.3s ease, top 0.3s ease, left 0.3s ease, box-shadow 0.2s ease;
+    letter-spacing: 1px;
+  }
+  button:hover { transform: translateY(-2px); box-shadow: 0 10px 18px rgba(0,0,0,0.22); }
+
+  #yesBtn {
+    background: linear-gradient(135deg, #ff6b9d 0%, #ff4785 100%);
+    color: white;
+  }
+  #yesBtn:hover {
+    background: linear-gradient(135deg, #ff4785 0%, #e64980 100%);
+  }
+
+  #noBtn {
+    background: linear-gradient(135deg, #6dd5ed 0%, #2193b0 100%);
+    color: white;
+    transform-origin: center center;
+  }
+  #noBtn.floating {
+    position: fixed;
+    z-index: 999;
+  }
+
+  .heart {
+    position: absolute;
+    font-size: 30px;
+    animation: floatUp 2s ease-out forwards;
+    pointer-events: none;
+    z-index: 5;
+  }
+  @keyframes floatUp {
+    0%   { transform: translateY(0) scale(0.5);   opacity: 1; }
+    100% { transform: translateY(-220px) scale(1.6); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 背景漂浮愛心 -->
+<div id="bgHearts"></div>
+
+<div id="stage">
+  <div class="card">
+    <div class="sub-top">♡ FROM ME TO YOU ♡</div>
+    <div id="message">給我 $$$$$$$</div>
+    <div class="sub-message">親愛的，今天的你<span class="accent">特別可愛</span> ✨</div>
+    <div class="sub-message">我有一個小小的、<span class="accent">真心的</span>請求……</div>
+
+    <div class="divider">♥ 你願意嗎 ♥</div>
+
+    <div id="buttons">
+      <button id="yesBtn">Yes 💖</button>
+      <button id="noBtn">No</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const yesBtn = document.getElementById('yesBtn');
+  const noBtn = document.getElementById('noBtn');
+  const message = document.getElementById('message');
+
+  // 背景小愛心生成
+  (function spawnBgHearts() {
+    const container = document.getElementById('bgHearts');
+    const symbols = ['♥', '♡', '❤'];
+    for (let i = 0; i < 18; i++) {
+      const el = document.createElement('div');
+      el.className = 'bg-heart';
+      el.textContent = symbols[i % symbols.length];
+      const size = 16 + Math.random() * 30;
+      el.style.fontSize = size + 'px';
+      el.style.left = (Math.random() * 100) + 'vw';
+      el.style.top = (100 + Math.random() * 40) + 'vh';
+      const dur = 8 + Math.random() * 10;
+      el.style.animationDuration = dur + 's';
+      el.style.animationDelay = (-Math.random() * dur) + 's';
+      container.appendChild(el);
+    }
+  })();
+
+  let scale = 1.0;
+  const shrinkStep = 0.10;
+  const floatThreshold = 0.50;
+  let isFloating = false;
+
+  function moveNoButtonRandomly() {
+    const btnRect = noBtn.getBoundingClientRect();
+    const w = btnRect.width;
+    const h = btnRect.height;
+    const maxX = window.innerWidth - w - 10;
+    const maxY = window.innerHeight - h - 10;
+    const randX = Math.max(0, Math.random() * maxX);
+    const randY = Math.max(0, Math.random() * maxY);
+    noBtn.style.left = randX + 'px';
+    noBtn.style.top = randY + 'px';
+  }
+
+  noBtn.addEventListener('click', () => {
+    if (isFloating) {
+      moveNoButtonRandomly();
+      return;
+    }
+
+    scale = Math.max(floatThreshold, scale - shrinkStep);
+    noBtn.style.transform = `scale(${scale})`;
+
+    if (scale <= floatThreshold + 0.0001) {
+      isFloating = true;
+      noBtn.classList.add('floating');
+      moveNoButtonRandomly();
+    }
+  });
+
+  function spawnHearts() {
+    const hearts = ['♥', '♡', '💖', '💕', '💗'];
+    for (let i = 0; i < 30; i++) {
+      setTimeout(() => {
+        const h = document.createElement('div');
+        h.className = 'heart';
+        h.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+        h.style.color = `hsl(${330 + Math.random()*40}, 80%, 65%)`;
+        h.style.left = (Math.random() * 100) + 'vw';
+        h.style.top = (60 + Math.random() * 30) + 'vh';
+        document.body.appendChild(h);
+        setTimeout(() => h.remove(), 2000);
+      }, i * 70);
+    }
+  }
+
+  yesBtn.addEventListener('click', () => {
+    message.textContent = '愛你唷！';
+    message.style.fontSize = '84px';
+    message.style.color = '#e64980';
+
+    // 隱藏副文字與按鈕，讓主訊息獨秀
+    document.querySelectorAll('.sub-message, .divider, .sub-top').forEach(el => el.style.display = 'none');
+    document.getElementById('buttons').style.display = 'none';
+    spawnHearts();
+  });
+</script>
+</body>
+</html>
